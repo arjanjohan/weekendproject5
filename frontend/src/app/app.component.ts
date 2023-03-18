@@ -3,7 +3,7 @@ import { Wallet, Contract, ethers, utils, BigNumber } from 'ethers';
 import { HttpClient } from '@angular/common/http';
 import tokenJson from '../assets/MyToken.json';
 
-import { environment } from '..//environments/environment';
+import { environment } from '../environments/environment.prod';
 
 const API_URL = 'http://localhost:3000/token-contract-address';
 const API_URL_MINT = 'http://localhost:3000/request-tokens';
