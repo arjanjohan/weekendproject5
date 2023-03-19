@@ -4,8 +4,8 @@ import { ethers } from 'ethers';
 import * as tokenJson from './/assets/LotteryToken.json';
 import * as lotteryJson from './/assets/Lottery.json';
 
-const TOKEN_CONTRACT_ADDRESS = 'TODO';
-const LOTTERY_CONTRACT_ADDRESS = 'TODO';
+const TOKEN_CONTRACT_ADDRESS = '0x7a511e39a98f2A9fe50995C32a4fCD4Ea17113C5';
+const LOTTERY_CONTRACT_ADDRESS = '0xF63e52D63D0cE2b4EF146E280DF825306f05D0F5';
 
 @Injectable()
 export class AppService {
@@ -44,11 +44,8 @@ export class AppService {
 
   async requestTokens(address: string, amount: number) {
     const privateKey = this.getPrivateKey();
-    console.log('privateKey', privateKey);
     const wallet = new ethers.Wallet(privateKey).connect(this.provider);
-    const tx = await this.tokenContract
-      .connect(wallet)
-      .mint(wallet.address, amount);
+    const tx = await this.lotteryContract.connect(wallet).purchaseTokens();
     const txReceipt = await tx.wait();
     return txReceipt.status == 1 ? 'Completed' : 'Reverted';
   }
