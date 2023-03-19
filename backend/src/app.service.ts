@@ -4,8 +4,8 @@ import { ethers } from 'ethers';
 import * as tokenJson from './/assets/LotteryToken.json';
 import * as lotteryJson from './/assets/Lottery.json';
 
-const TOKEN_CONTRACT_ADDRESS = 'TODO';
-const LOTTERY_CONTRACT_ADDRESS = 'TODO';
+const TOKEN_CONTRACT_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
+const LOTTERY_CONTRACT_ADDRESS = '0xa16E02E87b7454126E5E10d957A927A7F5B5d2be';
 
 @Injectable()
 export class AppService {
@@ -53,12 +53,21 @@ export class AppService {
     return txReceipt.status == 1 ? 'Completed' : 'Reverted';
   }
 
-  getPrivateKey(){
+  getPrivateKey() {
     const privateKey = this.configService.get<string>('PRIVATE_KEY');
     console.log(privateKey);
     if (!privateKey || privateKey.length <= 0) {
       throw new Error('Private key missing');
     }
     return privateKey;
+  }
+
+  async checkState() {
+    const state = this.lotteryContract.betsOpen();
+    if (!state) return;
+    const currentBlock = this.provider.getBlock('latest');
+    const currentBlockDate = new Date(currentBlock.timestamp * 1000);
+    const closingTime = this.lotteryContract.betsClosingTime();
+    const closingTimeDate = new Date(closingTime.toNumber() * 1000);
   }
 }
