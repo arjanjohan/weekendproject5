@@ -3,10 +3,12 @@ import { Wallet, Contract, ethers, utils, BigNumber } from 'ethers';
 import { HttpClient } from '@angular/common/http';
 import tokenJson from '../assets/MyToken.json';
 import lotteryJson from '../assets/Lottery.json';
+// import lotteryTokenJson from '../assets/LotteryToken.json';
 
 import { environment } from '..//environments/environment.prod';
 
-const API_URL = 'http://localhost:3000/token-contract-address';
+const API_TOKEN_URL = 'http://localhost:3000/token-contract-address';
+const API_LOTTERY_URL = 'http://localhost:3000/lottery-contract-address';
 const API_URL_MINT = 'http://localhost:3000/request-tokens';
 
 @Component({
@@ -47,6 +49,10 @@ export class AppComponent {
     if (!this.privateKey || this.privateKey.length <= 0) {
       throw new Error('Private key missing');
     }
+
+    this.getLotteryContractAddress().subscribe((data) => {
+      this.lotteryContractAddress = data.address;
+    });
   }
 
   connectWallet(privateKey: string) {
@@ -58,24 +64,29 @@ export class AppComponent {
     });
   }
 
+  getTokenAddres() {
+    return this.http.get<{ address: string }>(API_TOKEN_URL);
+  }
+
+  getLotteryContractAddress() {
+    return this.http.get<{ address: string }>(API_LOTTERY_URL);
+  }
+
   checkState() {
-    // if (!this.lotteryContractAddress) return;
-    // this.lotteryContract = new Contract(
-    //   this.lotteryContractAddress,
-    //   lotteryJson.abi,
-    //   this.userWallet ?? this.provider
-    // );
-    // this.state = new this.lotteryContract['betsOpen']();
-    // this.provider.getBlock('latest').then((block) => {
-    //   this.currentBlock = block.number;
-    //   this.currentBlockDate = new Date(block.timestamp * 1000);
-    // });
-    // this.closingTime = this.lotteryContract['betsClosingTime']();
-    // if (this.closingTime instanceof BigNumber) {
-    //   this.closingTimeDate = new Date(
-    //     (this.closingTime as BigNumber).toNumber() * 1000
-    //   );
-    // }
+    if (!this.lotteryContractAddress) return;
+    this.lotteryContract = new Contract(
+      this.lotteryContractAddress,
+      lotteryJson.abi,
+      this.userWallet ?? this.provider
+    );
+    this.state = this.lotteryContract['betsOpen']();
+    this.provider.getBlock('latest').then((block) => {
+      this.currentBlock = block.number;
+      this.currentBlockDate = new Date(block.timestamp * 1000);
+    });
+    this.closingTime = this.lotteryContract['betsClosingTime']();
+    if (!this.closingTime) return;
+    this.closingTimeDate = new Date(this.closingTime * 1000);
   }
 
   buyTokens(index: string, amount: string) {
@@ -98,10 +109,6 @@ export class AppComponent {
     //     this.tokenTotalSupply = parseFloat(totalSupplyStr);
     //   });
   }
-
-  // getTokenAddres() {
-  //   return this.http.get<{ address: string }>(API_URL);
-  // }
 
   // syncBlock() {
   //   this.blockNumber = 'loading...';

@@ -31,7 +31,10 @@
     </button>
     <div class="card mt-4 mx-auto" *ngIf="state">
       <div class="card-body">
-        <p>The lottery is: {{ state }}</p>
+        <p>The lottery is: {{ state ? "open" : "closed" }}</p>
+        <p>The last block was minted at {{ currentBlockDate }}</p>
+        <p>The lottery should close at {{ closingTimeDate }}</p>
+        <p>closing time value {{ closingTime }}</p>
       </div>
     </div>
 
