@@ -19,6 +19,16 @@
         </h6>
         <p class="card-text">ETH: {{ userEthBalance }}</p>
         <p class="card-text">LT0: {{ userTokenBalance }}</p>
+        <p class="card-text">TEST: {{ test }}</p>
+        <button
+          type="button"
+          class="btn btn-danger btn-1g px-4 gap-3 my-4"
+          (click)="buyTokens(amount.value)"
+        >
+          Buy tokens
+        </button>
+        <p>Amount:</p>
+        <input #amount type="number" min="0,0001" max="1000" class="input" />
       </div>
     </div>
 
@@ -29,12 +39,15 @@
     >
       Check Lottery Status
     </button>
-    <div class="card mt-4 mx-auto" *ngIf="state">
+
+    <div class="card mt-4 mx-auto" *ngIf="state == false">
+      <p>The lottery is: {{ state ? "open" : "closed" }}</p>
+    </div>
+    <div class="card mt-4 mx-auto" *ngIf="state == true">
       <div class="card-body">
         <p>The lottery is: {{ state ? "open" : "closed" }}</p>
         <p>The last block was minted at {{ currentBlockDate }}</p>
-        <p>The lottery should close at {{ closingTimeDate }}</p>
-        <p>closing time value {{ closingTime }}</p>
+        <p>Lottery closing time {{ closingTimeDate }}</p>
       </div>
     </div>
 
