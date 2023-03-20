@@ -1,7 +1,44 @@
 <div class="px-4 py-5 my-5 text-center">
-  <h1 class="display-5 fw-bold">Ballot Vote</h1>
+  <h1 class="display-5 fw-bold">Welocome to the Lottery</h1>
   <div class="col-lg-6 mx-auto">
-    <p *ngIf="blockNumber && blockNumber > 0" class="lead mb-4">
+    <div>
+      <button
+        type="button"
+        class="btn btn-primary btn-lg px-4 mr-2"
+        (click)="connectWallet(privateKey)"
+      >
+        Connect Wallet
+      </button>
+    </div>
+
+    <div class="card mt-4 mx-auto" *ngIf="userWallet">
+      <div class="card-body">
+        <h5 class="card-title">User Wallet</h5>
+        <h6 class="card-subtitle mb-2 text-muted">
+          Connected Address {{ userWallet.address }}
+        </h6>
+        <p class="card-text">ETH: {{ userEthBalance }}</p>
+        <p class="card-text">LT0: {{ userTokenBalance }}</p>
+      </div>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-success btn-lg px-4 gap-3 mt-4"
+      (click)="checkState()"
+    >
+      Check Lottery Status
+    </button>
+    <div class="card mt-4 mx-auto" *ngIf="state">
+      <div class="card-body">
+        <p>The lottery is: {{ state ? "open" : "closed" }}</p>
+        <p>The last block was minted at {{ currentBlockDate }}</p>
+        <p>The lottery should close at {{ closingTimeDate }}</p>
+        <p>closing time value {{ closingTime }}</p>
+      </div>
+    </div>
+
+    <!-- <p *ngIf="blockNumber && blockNumber > 0" class="lead mb-4">
       block number is <strong>{{ blockNumber }}</strong
       >.
     </p>
@@ -9,9 +46,9 @@
     <button
       type="button"
       class="btn btn-success btn-lg px-4 gap-3"
-      (click)="createWallet()"
+      (click)="connectWallet(privateKey)"
     >
-      {{ userWallet ? "Create another" : "Create" }} Wallet
+      Connect Wallet
     </button>
 
     <div class="card mt-4 mx-auto" *ngIf="userWallet">
@@ -29,44 +66,6 @@
         </button>
         <p>Amount:</p>
         <input #mintAmount type="number" min="0" max="1000" class="input" />
-      </div>
-    </div>
-
-    <div *ngIf="userWallet" class="card mt-4 mx-auto">
-      <div class="card-body">
-        <h5 class="card-title">Delegate</h5>
-        <p class="card-text">Token Balance: {{ userTokenBalance }} MKT</p>
-        <p>Delegate to:</p>
-        <input #address type="text" class="input col-lg-6" />
-        <p></p>
-        <button
-          *ngIf="address"
-          type="button"
-          class="btn btn-success btn-lg px-4 gap-3 my-4"
-          (click)="delegate(address.value)"
-        >
-          Delegate
-        </button>
-      </div>
-    </div>
-
-    <div *ngIf="userWallet" class="card mt-4 mx-auto">
-      <div class="card-body">
-        <h5 class="card-title">Vote</h5>
-        <p class="card-text">Voting power: {{ votingPower }}</p>
-        <p>Proposal #:</p>
-        <input #proposal type="number" min="0" max="3" class="input" />
-        <p>Votes:</p>
-        <input #votes type="number" min="0" max="10000" class="input" />
-        <p></p>
-        <button
-          *ngIf="votes"
-          type="button"
-          class="btn btn-primary btn-lg px-4 gap-3 my-4"
-          (click)="vote(proposal.value, votes.value)"
-        >
-          Vote
-        </button>
       </div>
     </div>
 
@@ -98,5 +97,6 @@
         cl Clear
       </button>
     </div>
+  </div> -->
   </div>
 </div>

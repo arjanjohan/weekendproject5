@@ -25,4 +25,9 @@ export class AppController {
   async requestTokens(@Body() body: RequestTokensDto) {
     return { result: this.appService.requestTokens(body.address, body.amount) };
   }
+
+  @Get('/check-status')
+  async checkState() {
+    return this.appService.checkState();
+  }
 }

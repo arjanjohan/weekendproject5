@@ -50,12 +50,21 @@ export class AppService {
     return txReceipt.status == 1 ? 'Completed' : 'Reverted';
   }
 
-  getPrivateKey(){
+  getPrivateKey() {
     const privateKey = this.configService.get<string>('PRIVATE_KEY');
     console.log(privateKey);
     if (!privateKey || privateKey.length <= 0) {
       throw new Error('Private key missing');
     }
     return privateKey;
+  }
+
+  async checkState() {
+    const state = this.lotteryContract.betsOpen();
+    if (!state) return;
+    const currentBlock = this.provider.getBlock('latest');
+    const currentBlockDate = new Date(currentBlock.timestamp * 1000);
+    const closingTime = this.lotteryContract.betsClosingTime();
+    const closingTimeDate = new Date(closingTime.toNumber() * 1000);
   }
 }
