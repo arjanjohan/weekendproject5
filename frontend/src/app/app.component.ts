@@ -58,6 +58,10 @@ export class AppComponent {
     this.getLotteryContractAddress().subscribe((data) => {
       this.lotteryContractAddress = data.address;
     });
+
+    this.getTokenAddres().subscribe((data) => {
+      this.lotteryTokenContractAddress = data.address;
+    });
   }
 
   connectWallet(privateKey: string) {
@@ -67,21 +71,24 @@ export class AppComponent {
       const balanceStr = utils.formatEther(balanceBN);
       this.userEthBalance = parseFloat(balanceStr);
     });
+    this.displayTokenBalance(privateKey);
   }
 
-  // async displayTokenBalance(privateKey: string) {
-  //   if (!this.lotteryTokenContractAddress) return;
-  //   this.lotteryTokenContract = new Contract(
-  //     this.lotteryTokenContractAddress,
-  //     lotteryJson.abi,
-  //     this.userWallet ?? this.provider
-  //   );
-  //   const balanceBN = await this.lotteryTokenContract['balanceOf'](
-  //     this.userWallet
-  //   );
-  //   const balance = ethers.utils.formatEther(balanceBN);
-  //   this.userTokenBalance = parseFloat(balance);
-  // }
+  async displayTokenBalance(privateKey: string) {
+    console.log("Token address: ", this.lotteryTokenContractAddress);
+    if (!this.lotteryTokenContractAddress) return;
+    this.lotteryTokenContract = new Contract(
+      this.lotteryTokenContractAddress,
+      lotteryJson.abi,
+      this.userWallet ?? this.provider
+    );
+    const balanceBN = await this.lotteryTokenContract['balanceOf'](
+      this.userWallet
+    );
+
+    const balance = ethers.utils.formatEther(balanceBN);
+    this.userTokenBalance = parseFloat(balance);
+  }
 
   getTokenAddres() {
     return this.http.get<{ address: string }>(API_TOKEN_URL);
@@ -111,6 +118,7 @@ export class AppComponent {
 
   async buyTokens(amount: string) {
     console.log('Waiting...payment in progress...');
+    console.log('Contract address:', this.lotteryContractAddress)
     if (!this.lotteryContractAddress) return;
     this.lotteryContract = new Contract(
       this.lotteryContractAddress,
