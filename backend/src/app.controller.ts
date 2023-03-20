@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { OpenBetsDto } from 'dtos/OpenBetsDto';
 import { RequestTokensDto } from 'dtos/RequestTokensDto';
 import { AppService } from './app.service';
 
@@ -29,5 +30,10 @@ export class AppController {
   @Get('/check-status')
   async checkState() {
     return this.appService.checkState();
+  }
+
+  @Post('/open-bets')
+  async openBets(@Body() body: OpenBetsDto) {
+    return this.appService.openBets(body.duration);
   }
 }

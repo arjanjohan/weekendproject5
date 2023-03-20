@@ -67,4 +67,14 @@ export class AppService {
     const closingTime = this.lotteryContract.betsClosingTime();
     const closingTimeDate = new Date(closingTime.toNumber() * 1000);
   }
+
+  async openBets(duration: number | undefined) {
+    const privateKey = this.getPrivateKey();
+    const wallet = new ethers.Wallet(privateKey).connect(this.provider);
+    const currentBlock = this.provider.getBlock('latest');
+    const tx = this.lotteryContract
+      .connect(wallet)
+      .openBets(currentBlock.timestamp + Number(duration));
+    const receipt = await tx.wait();
+  }
 }
