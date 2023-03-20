@@ -42,17 +42,40 @@ export class AppService {
     return txReceipt.status == 1 ? 'Completed' : 'Reverted';
   }
 
-  async requestTokens(address: string, amount: number) {
+  // async getPrize(address: string): Promise<string> {
+  //   console.log("get prize");
+  //   const tx = await this.lotteryContract.getPrize(address);
+  //   const txReceipt = await tx.wait();
+  //   return txReceipt.status == 1 ? 'Completed' : 'Reverted';
+  // }
+
+  async openBets(closingTime: number): Promise<string> {
     const privateKey = this.getPrivateKey();
     const wallet = new ethers.Wallet(privateKey).connect(this.provider);
-    const tx = await this.lotteryContract.connect(wallet).purchaseTokens();
+    const tx = await this.lotteryContract.connect(wallet).openBets(closingTime);
+    const txReceipt = await tx.wait();
+    return txReceipt.status == 1 ? 'Completed' : 'Reverted';
+  }
+
+  async closeBets(): Promise<string> {
+    const privateKey = this.getPrivateKey();
+    const wallet = new ethers.Wallet(privateKey).connect(this.provider);
+    const tx = await this.lotteryContract.connect(wallet).closeLottery();
+    const txReceipt = await tx.wait();
+    return txReceipt.status == 1 ? 'Completed' : 'Reverted';
+  }
+
+  async requestTokens(address: string, amount: number) {
+    const amountEther = ethers.utils.parseEther(amount.toString());
+    const privateKey = this.getPrivateKey();
+    const wallet = new ethers.Wallet(privateKey).connect(this.provider);
+    const tx = await this.lotteryContract.connect(wallet).purchaseTokens({value: amountEther});
     const txReceipt = await tx.wait();
     return txReceipt.status == 1 ? 'Completed' : 'Reverted';
   }
 
   getPrivateKey(){
     const privateKey = this.configService.get<string>('PRIVATE_KEY');
-    console.log(privateKey);
     if (!privateKey || privateKey.length <= 0) {
       throw new Error('Private key missing');
     }
