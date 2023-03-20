@@ -10,6 +10,7 @@ import { environment } from '..//environments/environment.prod';
 const API_TOKEN_URL = 'http://localhost:3000/token-contract-address';
 const API_LOTTERY_URL = 'http://localhost:3000/lottery-contract-address';
 const API_URL_MINT = 'http://localhost:3000/request-tokens';
+const API_OPEN_BETS = 'http://localhost:3000/open-bets';
 
 @Component({
   selector: 'app-root',
@@ -36,6 +37,7 @@ export class AppComponent {
   currentBlockDate: Date | undefined;
   closingTime: number | undefined;
   closingTimeDate: Date | undefined;
+  duration: number | undefined;
 
   privateKey = environment.privateKey;
   alchemyApiKey = environment.alchemyApiKey;
@@ -87,6 +89,14 @@ export class AppComponent {
     this.closingTime = this.lotteryContract['betsClosingTime']();
     if (!this.closingTime) return;
     this.closingTimeDate = new Date(this.closingTime * 1000);
+  }
+
+  openBets(duration: string | undefined) {
+    const body = { duration: duration };
+    console.log(body);
+    return this.http.post(API_OPEN_BETS, body).subscribe((result) => {
+      console.log('RESULT', result);
+    });
   }
 
   buyTokens(index: string, amount: string) {

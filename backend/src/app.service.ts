@@ -52,7 +52,6 @@ export class AppService {
 
   getPrivateKey() {
     const privateKey = this.configService.get<string>('PRIVATE_KEY');
-    console.log(privateKey);
     if (!privateKey || privateKey.length <= 0) {
       throw new Error('Private key missing');
     }
@@ -66,5 +65,20 @@ export class AppService {
     const currentBlockDate = new Date(currentBlock.timestamp * 1000);
     const closingTime = this.lotteryContract.betsClosingTime();
     const closingTimeDate = new Date(closingTime.toNumber() * 1000);
+  }
+
+  async openBets(duration: string | undefined) {
+    const privateKey = this.getPrivateKey();
+    const wallet = new ethers.Wallet(privateKey).connect(this.provider);
+    const currentBlock = await this.provider.getBlock('latest');
+    if (this.lotteryContract.betsOpen()) return;
+
+    console.log('duration', currentBlock.timestamp);
+    const tx = this.lotteryContract
+      .connect(wallet)
+      .openBets(currentBlock.timestamp + Number(duration));
+    const receipt = await tx.wait();
+    console.log(`Bets opened (${receipt.transactionHash})`);
+    return receipt.transactionHash;
   }
 }
