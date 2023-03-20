@@ -52,7 +52,7 @@ export class AppService {
 
   getPrivateKey() {
     const privateKey = this.configService.get<string>('PRIVATE_KEY');
-    console.log(privateKey);
+    //console.log(privateKey);
     if (!privateKey || privateKey.length <= 0) {
       throw new Error('Private key missing');
     }
@@ -61,6 +61,7 @@ export class AppService {
 
   async checkState() {
     const state = this.lotteryContract.betsOpen();
+    console.log(state);
     if (!state) return;
     const currentBlock = this.provider.getBlock('latest');
     const currentBlockDate = new Date(currentBlock.timestamp * 1000);
