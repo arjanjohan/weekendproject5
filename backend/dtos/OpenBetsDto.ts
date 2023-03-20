@@ -1,3 +1,3 @@
 export class OpenBetsDto {
-  duration: number | undefined;
+  duration: string;
 }

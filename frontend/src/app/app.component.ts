@@ -91,25 +91,12 @@ export class AppComponent {
     this.closingTimeDate = new Date(this.closingTime * 1000);
   }
 
-  openBets(duration: number | undefined) {
-    // if (!this.lotteryContractAddress) return;
-    // this.lotteryContract = new Contract(
-    //   this.lotteryContractAddress,
-    //   lotteryJson.abi,
-    //   this.userWallet ?? this.provider
-    // );
-    // this.provider.getBlock('latest').then((block) => {
-    //   this.currentBlock = block.number;
-    // });
-    // this.currentBlock &&
-    //   this.lotteryContract['openBets'](this.currentBlock + Number(duration));
-    const body = { duration };
-    return this.http
-      .post<{ result: string }>(API_OPEN_BETS, body)
-      .subscribe((result) => {
-        console.log('RESULT', result);
-        console.log('Duration ', duration);
-      });
+  openBets(duration: string | undefined) {
+    const body = { duration: duration };
+    console.log(body);
+    return this.http.post(API_OPEN_BETS, body).subscribe((result) => {
+      console.log('RESULT', result);
+    });
   }
 
   buyTokens(index: string, amount: string) {

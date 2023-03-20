@@ -38,19 +38,19 @@
       </div>
     </div>
 
-    <div class="card mt-4 mx-auto" *ngIf="!openBets">
+    <div class="card mt-4 mx-auto">
       <div class="card-body">
         <p>Duration:</p>
         <input #duration type="number" min="0" max="1000" class="input" />
       </div>
+      <button
+        type="button"
+        class="btn btn-success btn-lg px-4 gap-3 mt-4"
+        (click)="openBets(duration.value)"
+      >
+        Open bets
+      </button>
     </div>
-    <button
-      type="button"
-      class="btn btn-success btn-lg px-4 gap-3 mt-4"
-      (click)="openBets(duration)"
-    >
-      Open bets
-    </button>
 
     <!-- <p *ngIf="blockNumber && blockNumber > 0" class="lead mb-4">
       block number is <strong>{{ blockNumber }}</strong
