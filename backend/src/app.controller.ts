@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { OpenBetsDto } from 'dtos/OpenBetsDto';
 import { RequestTokensDto } from 'dtos/RequestTokensDto';
 import { AppService } from './app.service';
 
@@ -24,5 +25,10 @@ export class AppController {
   @Post('/request-tokens')
   async requestTokens(@Body() body: RequestTokensDto) {
     return { result: this.appService.requestTokens(body.address, body.amount) };
+  }
+
+  @Get('token-balance')
+  async getTokenBalance(@Query('address') address: string): Promise<number>{
+    return this.appService.getTokenBalance(address)
   }
 }
