@@ -42,8 +42,6 @@ export class AppComponent {
   closingTimeDate: Date | undefined;
   amount: string = '0';
 
-  test: string = '0';
-
   privateKey = environment.privateKey;
   alchemyApiKey = environment.alchemyApiKey;
 
@@ -71,21 +69,19 @@ export class AppComponent {
     });
   }
 
-  async displayTokenBalance(privateKey: string) {
-    if (!this.lotteryTokenContractAddress) return;
-    this.lotteryTokenContract = new Contract(
-      this.lotteryTokenContractAddress,
-      lotteryJson.abi,
-      this.userWallet ?? this.provider
-    );
-    // const balanceBN = await this.lotteryTokenContract['balanceOf'](
-    //   this.userWallet
-    // );
-
-    this.test = await this.lotteryTokenContract['balanceOf'](this.userWallet);
-    //const balance = ethers.utils.formatEther(balanceBN);
-    //
-  }
+  // async displayTokenBalance(privateKey: string) {
+  //   if (!this.lotteryTokenContractAddress) return;
+  //   this.lotteryTokenContract = new Contract(
+  //     this.lotteryTokenContractAddress,
+  //     lotteryJson.abi,
+  //     this.userWallet ?? this.provider
+  //   );
+  //   const balanceBN = await this.lotteryTokenContract['balanceOf'](
+  //     this.userWallet
+  //   );
+  //   const balance = ethers.utils.formatEther(balanceBN);
+  //   this.userTokenBalance = parseFloat(balance);
+  // }
 
   getTokenAddres() {
     return this.http.get<{ address: string }>(API_TOKEN_URL);
@@ -126,7 +122,6 @@ export class AppComponent {
     });
     const receipt = await tx.wait();
     console.log(`Tokens bought (${receipt.transactionHash})\n`);
-    await this.displayTokenBalance(this.privateKey);
   }
 
   // updateTokenInfo() {
